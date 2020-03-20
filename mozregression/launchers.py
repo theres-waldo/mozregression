@@ -473,6 +473,7 @@ class GeckoViewExampleLauncher(AndroidLauncher):
         self.adb.launch_activity(self.package_name,
                                  activity_name="GeckoViewActivity",
                                  extra_args=["-profile", self.remote_profile],
+                                 moz_env={'MOZ_LOG': 'apz.mobileviewport:4'},
                                  e10s=True)
 
 

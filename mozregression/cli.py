@@ -191,6 +191,14 @@ def create_parser(defaults):
                               " INI, use 'file.ini:section' to specify a"
                               " particular section."))
 
+    parser.add_argument('--env', nargs='*', dest='env_vars',
+                        help=(" An environment variable to set. Must be a"
+                              " key-value pair separated by a '='. This is"
+                              " only hooked up for Android (on desktop,"
+                              " variables in the environment of the"
+                              " mozregression invocation are automatically"
+                              " propagated to the Firefox process)."))
+
     parser.add_argument("-n", "--app",
                         choices=FC_REGISTRY.names(),
                         default=defaults["app"],
@@ -337,6 +345,11 @@ def preferences(prefs_files, prefs_args, logger):
 
     return prefs()
 
+def parse_env_vars(env_vars):
+    """
+    Parse environment variables and return them in a map.
+    """
+    pass
 
 def get_default_date_range(fetch_config):
     """
@@ -520,6 +533,7 @@ class Configuration(object):
                 if fetch_config.should_use_archive():
                     self.action = "bisect_nightlies"
         options.preferences = preferences(options.prefs_files, options.prefs, self.logger)
+        options.env_vars = parse_env_vars(options.env_vars)
         # convert GiB to bytes.
         options.persist_size_limit = \
             int(abs(float(options.persist_size_limit)) * 1073741824)
